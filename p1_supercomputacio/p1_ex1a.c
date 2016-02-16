@@ -54,7 +54,7 @@ int main(void)
 	
 	//Your code here
 	
-	array = (int *) realloc(array, new_size); 
+	array = (int *) realloc(array, new_size* sizeof(int)); 
 
 	//If the new size is larger, set all members to 0. Why?
 
