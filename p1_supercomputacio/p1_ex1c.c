@@ -19,7 +19,7 @@ struct arbreBinari
 struct arbreBinari* reserva_memoria(int contingut)
 {
 	//Reserva memoria
-	struct arbreBinari* arbre = (arbreBinari *) malloc(sizeof(arbreBinari))//...
+	struct arbreBinari* arbre = (arbreBinari *) malloc(sizeof(arbreBinari));//...
 
 	if(arbre!=NULL)
 	{
@@ -49,15 +49,15 @@ struct arbreBinari* afegeix_node(struct arbreBinari* arrel, int contingut)
 	else if(contingut < arrel->contingut)
 	{
 		//Your code here
-		afegeix_node(arrel->esq);
+		arrel->esq = afegeix_node(arrel->esq,contingut);
 	}
 	else
 	{
 		//Your code here
-		afegeix_node(arrel->dret)
+		arrel->dret = afegeix_node(arrel->dret,contingut);
 	}
 
-
+	return arrel;
 
 }
 
@@ -68,7 +68,7 @@ void pre_order(struct arbreBinari* arrel)
 	//1.Condició de sortida
 	if(arrel == NULL)return;
 	//2.Imprimeix contingut
-	printf("%d",arrel->contingut);
+	printf("%d\n",arrel->contingut);
 	//3.Crida recursiva
 	pre_order(arrel->esq);
 	pre_order(arrel->dret);
@@ -84,7 +84,7 @@ void in_order(struct arbreBinari* arrel)
 	
 	if(arrel == NULL)return;
 	pre_order(arrel->esq);
-	printf("%d",arrel->contingut);
+	printf("%d\n",arrel->contingut);
 	pre_order(arrel->dret);
 
 }
@@ -127,18 +127,20 @@ arrel = afegeix_node(arrel, 9);
 
 
 //Cridem les funcions de cerca
+printf("Preorden\n");
 pre_order(arrel);
+printf("Inorden\n");
 in_order(arrel);
 
 int count = 0;
 //Alliberem la memoria reservada per cada node
 //Your code here
-esborra_arbre(arrel);
+count = esborra_arbre(arrel);
 
-arrel=NULL;
+arrel = NULL;
 
 //Nombre total de nodes esborrats
-printf("Nodes esborrats: %d", count);
+printf("Nodes esborrats: %d\n", count);
 
 return 0;
 
