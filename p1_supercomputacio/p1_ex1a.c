@@ -28,9 +28,9 @@ int main(void)
 	//Fill array elements using random values. Acces to array position adress. Not by value: (NOT array[i])
 	int i;
 	int* ptr;
-	for(i = 0 , ptr = array; i < size ; ++i, ptr++)
-	{
-		*ptr = (int)rand()/(int)(RAND_MAX/50.0);
+	for(i = 0 , ptr = array; i < size ; ++i, ptr++) //we use ptr for go through "array" and access to the value
+	{												//of every position in the array. If we use "array[i]" it loads
+		*ptr = (int)rand()/(int)(RAND_MAX/50.0);	// the position in the memory where it's.
 	}
 	
 
@@ -59,8 +59,8 @@ int main(void)
 	//If the new size is larger, set all members to 0. Why?
 
 	//Your code here
-	if(new_size > size)
-	{
+	if(new_size > size)			//we put zeros in all the new positions, if we don't do it, we don't know
+	{							//which will be the values of them
 		for (i = size , ptr = array+size ; i < new_size ; ++i , ptr ++ ){
 			*ptr = 0;
 		}	

@@ -19,12 +19,12 @@ struct arbreBinari
 struct arbreBinari* reserva_memoria(int contingut)
 {
 	//Reserva memoria
-	struct arbreBinari* arbre = //...
+	struct arbreBinari* arbre = (arbreBinari *) malloc(sizeof(arbreBinari))//...
 
 	if(arbre!=NULL)
 	{
 			//Your code here
-
+			arbre->contingut = contingut;
 	}
 
 	return arbre;
@@ -40,18 +40,21 @@ struct arbreBinari* afegeix_node(struct arbreBinari* arrel, int contingut)
 	if(arrel==NULL)
 	{
 		//1.Reserva memoria per el node
+		arrel = reserva_memoria(contingut);
 		//2.Retorna la nova arrel
-
+		return arrel;
 	}
 	
 	//Crida recursiva a afegeix_node segons el valor de contingut
 	else if(contingut < arrel->contingut)
 	{
 		//Your code here
+		afegeix_node(arrel->esq);
 	}
 	else
 	{
 		//Your code here
+		afegeix_node(arrel->dret)
 	}
 
 
@@ -63,11 +66,12 @@ void pre_order(struct arbreBinari* arrel)
 {
 
 	//1.Condició de sortida
+	if(arrel == NULL)return;
 	//2.Imprimeix contingut
+	printf("%d",arrel->contingut);
 	//3.Crida recursiva
-
-	
-
+	pre_order(arrel->esq);
+	pre_order(arrel->dret);
 }
 
 //Cerca en in-order. 
@@ -78,6 +82,10 @@ void in_order(struct arbreBinari* arrel)
 	//2. Imprimeix contingut
 	//3. Crida recursiva
 	
+	if(arrel == NULL)return;
+	pre_order(arrel->esq);
+	printf("%d",arrel->contingut);
+	pre_order(arrel->dret);
 
 }
 
@@ -89,12 +97,14 @@ int esborra_arbre(struct arbreBinari* arrel)
 	int count = 0;
 
 	//1.Condició de sortida
+	if(arrel == NULL)return count;
 	//2. Esborrar cada node recursivament
+	count += esborra_arbre(arrel->esq);
+	count += esborra_arbre(arrel->dret);
 	//3.Allibera memoria de cada node 
-
+	free(arrel);
 	//Retorna nombre de nodes esborrats
 	return ++count;
-
 
 }
 
@@ -123,7 +133,7 @@ in_order(arrel);
 int count = 0;
 //Alliberem la memoria reservada per cada node
 //Your code here
-
+esborra_arbre(arrel);
 
 arrel=NULL;
 
