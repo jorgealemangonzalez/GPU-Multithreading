@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#define MAX(a,b) (((a)>(b))?(a):(b))
 
 /*
 
@@ -21,41 +22,64 @@ int main(void)
 	scanf("%d", &size);
 
 	// Allocate memory for an array of size elements
-	int *array = //...
+	int *array = (int *) malloc(size * sizeof(int)); //...
 
 
 	//Fill array elements using random values. Acces to array position adress. Not by value: (NOT array[i])
+	int i;
+	int* ptr;
+	for(i = 0 , ptr = array; i < size ; ++i, ptr++)
+	{
+		*ptr = (int)rand()/(int)(RAND_MAX/50.0);
+	}
 	
-	/* ??? */ = (int)rand()/(int)(RAND_MAX/50.0);;
-
 
 	// Print the array elements using pointers to each array position. (NOT array[i]) 
 	//Your code here
+	
+	printf("\nArray values:\n");
+	for (i = 0 , ptr = array ; i < size ; ++i , ptr ++ ){
+		
+		printf("%d\n",*ptr);
+	} 
 
 	// User specifies the new array size, stored in variable n2.
-	printf("\nNew array size: ");
+	printf("New array size:\n");
 	int new_size = 0;
 	scanf("%d", &new_size);
 
 
 
 	// Change the array size dynamically using realloc()
-
+	
 	//Your code here
+	
+	array = (int *) realloc(array, new_size); 
 
 	//If the new size is larger, set all members to 0. Why?
 
 	//Your code here
+	if(new_size > size)
+	{
+		for (i = size , ptr = array+size ; i < new_size ; ++i , ptr ++ ){
+			*ptr = 0;
+		}	
+	}
 	
 	// Print the resized array elements using pointers to each array position. (NOT array[i]) 
 
 	//Your code here
 
-
+	printf("Array values:\n");
+	for (i = 0 , ptr = array ; i < new_size ; ++i , ptr ++ ){
+		
+		printf("%d\n",*ptr);
+	} 
 
 	//Set memory free
 	//Your code here
-
+	
+	free(array);
 	return 0;
 
 
