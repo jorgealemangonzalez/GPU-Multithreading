@@ -17,8 +17,7 @@ void multiply_matrix(float *A, float *B, float *M, int width, int pos)
  */
 
 //Your code here
-
-
+    
 }
 
 //Calculate de matrix determinant
@@ -47,14 +46,10 @@ int main(void)
     srand(time(NULL));
     
     //Allocate the memory
-    float *A = (float *) malloc (width  * sizeof(float); //..... 
-    float *B = (float *) malloc(width  * sizeof(float); //..... 
-    float *M = (float *) malloc(width  * sizeof(float); //..... 
-    for ( i = 0 ; i < width ; ++i){
-        (A+i) = (float *) malloc(width  * sizeof(float);
-        (D+i) = (float *) malloc(width  * sizeof(float);
-        (M+i) = (float *) malloc(width  * sizeof(float);
-    }
+    float *A = (float *) malloc(width * width * sizeof(float)); //..... 
+    float *B = (float *) malloc(width * width * sizeof(float)); //..... 
+    float *M = (float *) malloc(width * width * sizeof(float)); //..... 
+
 
     for(int i=0;i<(width*width);i++) { 
       
