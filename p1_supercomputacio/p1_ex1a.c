@@ -28,7 +28,7 @@ int main(void)
 	//Fill array elements using random values. Acces to array position adress. Not by value: (NOT array[i])
 	int i;
 	int* ptr;
-	for(i = 0 , ptr = array; i < 20 ; ++i, ptr++) //we use ptr for go through "array" and access to the value
+	for(i = 0 , ptr = array; i < size ; ++i, ptr++) //we use ptr for go through "array" and access to the value
 	{												//of every position in the array. If we use "array[i]" it loads
 		*ptr = (int)rand()/(int)(RAND_MAX/50.0);	// the position in the memory where it's.
 	}
@@ -38,7 +38,7 @@ int main(void)
 	//Your code here
 	
 	printf("\nArray values:\n");
-	for (i = 0 , ptr = array ; i < 20 ; ++i , ptr ++ ){
+	for (i = 0 , ptr = array ; i < size ; ++i , ptr ++ ){
 		
 		printf("%d\n",*ptr);
 	} 

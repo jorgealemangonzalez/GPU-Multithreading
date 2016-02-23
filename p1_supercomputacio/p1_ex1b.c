@@ -41,19 +41,20 @@ int main(void)
 {
 
     srand(time(NULL));
-
+    
+	int i;
 
 	//Initialize an array of size SIZE with random values
 	int a[SIZE];
 
-	for(int i=0;i<SIZE;i++)
+	for(i=0;i<SIZE;i++)
 		a[i] = (int)rand()/(int)(RAND_MAX/60.0);
   
 
 	printf("Print original values\n");
 
 	//Your code here
-	int i;
+
 	for(i = 0 ; i < SIZE ; ++i)
 		printf("%d ",*(a+i));
 	printf("\n");

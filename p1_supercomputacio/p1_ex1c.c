@@ -19,7 +19,7 @@ struct arbreBinari
 struct arbreBinari* reserva_memoria(int contingut)
 {
 	//Reserva memoria
-	struct arbreBinari* arbre = (arbreBinari *) malloc(sizeof(arbreBinari));//...
+	struct arbreBinari* arbre = (struct arbreBinari *) malloc(sizeof(struct arbreBinari));//...
 
 	if(arbre!=NULL)
 	{
