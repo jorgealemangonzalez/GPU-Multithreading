@@ -28,7 +28,7 @@ int main()
 	int blockSize = 1024;
 	int gridSize = (int)ceil((int)N/blockSize);
 	
-	add<<<N,N>>>(dev_a,dev_b,dev_c); //Execute Kernel
+	add<<<N,1>>>(dev_a,dev_b,dev_c); //Execute Kernel 1 sol bloc amb tants threads como dimension
 	//Call CUDA kernel
 	
 	cudaMemcpy(c, dev_c, N*sizeof(int), cudaMemcpyDeviceToHost);//Copy memory from device to host
