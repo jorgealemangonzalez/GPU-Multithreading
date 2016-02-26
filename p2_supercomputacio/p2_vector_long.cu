@@ -1,6 +1,7 @@
 #include "stdio.h"
-//#define N 514    //Para correr con mas threads de los posibles en un bloque
-#define N  65537
+#define N 76078
+#define MIN(a,b) (a < b?a:b )
+
 __global__ void add(int *a, int *b, int *c)
 {
 	int tid = threadIdx.x + blockIdx.x * blockDim.x; //El id del thread es el id que tiene ese thread dentro de un bloque
@@ -24,10 +25,15 @@ int main()
 
 	cudaMemcpy(dev_a, a, N*sizeof(int), cudaMemcpyHostToDevice); //host to device
 	cudaMemcpy(dev_b, b, N*sizeof(int), cudaMemcpyHostToDevice);
-
-	//add<<<1,N>>>(dev_a,dev_b,dev_c); //Ejecuta 1 bloque con 514 threads( en este PC tiene una grafica distinta), dos mas del maximo k soporta
-	add<<<N,1>>>(dev_a,dev_b,dev_c); //Ejecuta 65537 bloques de 1 solo thread cada uno
 	
+	//Calculamos el máximo divisor menor o igual a 512 de N 
+	//Podemos hacer esto o hacer que los threads que obtengan un tid mayor a N no modifiquen el vector
+	int threads_block = MIN(512,N);
+	while(N%threads_block != 0)--threads_block;
+	
+	int blocks = N / threads_block;
+	add<<<blocks,threads_block>>>(dev_a,dev_b,dev_c); 
+
 	//Call CUDA kernel
 	cudaMemcpy(c, dev_c, N*sizeof(int), cudaMemcpyDeviceToHost);//Copy memory from device to host
 	//copy array to host

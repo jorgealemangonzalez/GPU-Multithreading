@@ -27,7 +27,6 @@ int main()
 
 	//add<<<1,N>>>(dev_a,dev_b,dev_c); //Ejecuta 1 bloque con 514 threads( en este PC tiene una grafica distinta), dos mas del maximo k soporta
 	add<<<N,1>>>(dev_a,dev_b,dev_c); //Ejecuta 65537 bloques de 1 solo thread cada uno
-	
 	//Call CUDA kernel
 	cudaMemcpy(c, dev_c, N*sizeof(int), cudaMemcpyDeviceToHost);//Copy memory from device to host
 	//copy array to host

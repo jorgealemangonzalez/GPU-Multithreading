@@ -54,7 +54,8 @@ int main(void)
     			mhost[width*i+j] += m1[i*width + k] * m2[j + width*k];
     
     
-    
+    cudaMemcpy(dev_m1, m1, size, cudaMemcpyHostToDevice); 
+    cudaMemcpy(dev_m2, m2, size, cudaMemcpyHostToDevice); 
     
     int *dev_m,*dev_m1,*dev_m2,*dev_mresult; 
     cudaMalloc((void **)&dev_m, size); 
@@ -63,8 +64,6 @@ int main(void)
     cudaMalloc((void **)&dev_mresult, size);
     dim3 dimGrid(width, width); 
     dim3 dimBlock(1, 1); 
-    cudaMemcpy(dev_m1, m1, size, cudaMemcpyHostToDevice); 
-    cudaMemcpy(dev_m2, m2, size, cudaMemcpyHostToDevice); 
     
     fill_matrix_device<<<dimGrid, dimBlock>>>(dev_m, width); 
     matrix_mult_device<<<dimGrid, dimBlock>>>(dev_m1,dev_m2,dev_mresult, width);
