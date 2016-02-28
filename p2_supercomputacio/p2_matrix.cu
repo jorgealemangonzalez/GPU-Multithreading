@@ -10,14 +10,16 @@ __global__ void fill_matrix_device(int *m, int width)
     m[tx*width+ty] = value; 
 }
 __global__ void matrix_mult_device(int *Ma, int *Mb, int *Mc, int width)
-{
+{   
+    
 	int tx = blockIdx.x;
 	int ty = blockIdx.y;
 	int posfil = ty*width ,poscol = tx;
-	
+
 	for(int i = 0 ; i < width ; ++i)
-		for(int j = 0 ; j < width ; ++j)
-			Mc[posfil+poscol+i] += Ma[posfil+j]*Mb[poscol+j*width];
+		Mc[poscol+posfil] += Ma[posfil+i]*Mb[poscol+i*width];
+
+
 	
 }
 void fill_matrix_host(int *m, int width) 
@@ -46,14 +48,12 @@ int main(void)
     fill_matrix_host(m, width);
     fill_matrix_host(m1, width);
     fill_matrix_host(m2, width);
-    
+   
     //hacemos la multiplicación de matrices
     for(int i = 0 ; i < width; ++i)
     	for(int j = 0 ; j < width; ++j)
     		for(int k =0 ; k < width ; ++k)
     			mhost[width*i+j] += m1[i*width + k] * m2[j + width*k];
-    
-    
     
     
     int *dev_m,*dev_m1,*dev_m2,*dev_mresult; 
@@ -65,6 +65,7 @@ int main(void)
     dim3 dimBlock(1, 1); 
     cudaMemcpy(dev_m1, m1, size, cudaMemcpyHostToDevice); 
     cudaMemcpy(dev_m2, m2, size, cudaMemcpyHostToDevice); 
+    cudaMemset(dev_mresult,0,size);
     
     fill_matrix_device<<<dimGrid, dimBlock>>>(dev_m, width); 
     matrix_mult_device<<<dimGrid, dimBlock>>>(dev_m1,dev_m2,dev_mresult, width);
@@ -73,7 +74,7 @@ int main(void)
     
     cudaMemcpy(mok, dev_m, size, cudaMemcpyDeviceToHost); 
     cudaMemcpy(m2, dev_mresult, size, cudaMemcpyDeviceToHost); //ahora m2 tiene el resultado del device
-    
+
     int ok=1; 
     for(int i=0;i<(width*width);++i) { 
         if(m[i]!=mok[i]) ok=0; 
