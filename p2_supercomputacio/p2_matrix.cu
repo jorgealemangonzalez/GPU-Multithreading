@@ -72,7 +72,7 @@ int main(void)
     int *mok; 
     mok = (int *)malloc(size); 
     
-    cudaMemcpy(mok, dev_m, size, cudaMemcpyDeviceToHost); 
+    cudaMemcpy(mok, dev_m, size, cudaMemcpyDeviceToHost); //Ejercicio 5
     cudaMemcpy(m2, dev_mresult, size, cudaMemcpyDeviceToHost); //ahora m2 tiene el resultado del device
 
     int ok=1; 
@@ -80,7 +80,7 @@ int main(void)
         if(m[i]!=mok[i]) ok=0; 
     } 
     
-    fprintf(stdout, "%s\n", ok?"ok":"error"); 
+    fprintf(stdout, "%s\n", ok?"ok":"error"); //printf sobre el ejercicio 5
     
     
     //comprobar si la multiplicación a sido correcta
