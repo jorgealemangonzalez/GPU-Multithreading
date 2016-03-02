@@ -1,27 +1,34 @@
 #include<stdio.h>
 #include <time.h>
-#include<math.h>
 #define TRUE 1
 #define FALSE 0
 #define MIN(a,b) (a < b?a:b )
-static const int N = 1500000;
+static const int N = 150;
 
 __global__ void cerca_array_device(int *array,int *valor,int *res)
 {
-
+	int b;
     int id = threadIdx.x + blockIdx.x * blockDim.x;
-    if(*res == FALSE && *valor == array[id])
+    if(*res == FALSE && *valor == array[id]){
     	*res = TRUE;
+    	/*for(int i = 0; i <= 1000000; i++) //demostrar que si se hacen mas operacines en la busqueda, los threads son
+			b = (b*70)/3;*/				//muxo mas rapidos.
+    }
 
 }
 
 
 __host__ bool cerca_array_host(int *array, int valor)
 {
-
-	for(int i = 0 ; i < N ; ++i)
-		if(array[i] == valor)
+	int b;
+	for(int i = 0 ; i < N ; ++i){
+		if(array[i] == valor){
 			return true;
+		}
+		/*for(int i = 0; i <= 1000000; i++)
+			b = (b*70)/3;*/
+	}
+
 	return false;
 }
 
