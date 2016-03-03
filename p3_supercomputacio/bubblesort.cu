@@ -45,7 +45,7 @@ int main(int argc, char const *argv[])
 	int threads_block = MIN(512,N);
 	while(N%threads_block != 0)--threads_block;
 	int blocks = N / threads_block;
-	for (int it = 0; it <= 2*N; it++) {
+	for (int it = 0; it <= 0; it++) {
 
 		//Crida al kernel
 		bubble_sort<<<blocks,threads_block>>>(dev_a,it);	//nose el porque se debe hacer hasta 2*N
