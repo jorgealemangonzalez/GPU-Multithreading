@@ -50,13 +50,7 @@ __host__ void printa(int *array,int sizex,int sizey)
 
 int main(void) {
 
-
-    //blockDim.x -- number threads in block
-    //blockid -- block index
-    //gridim number blocks in grid
-
-
-    int *dev_a , numbloq , gridsizex,gridsizey;
+    int *dev_a  , gridsizex,gridsizey;
     int *array;
     int size = N*sizeof(int);
 
@@ -76,13 +70,12 @@ int main(void) {
     dim3 grid_dim(sqrt(N)/block_dim.x,sqrt(N)/block_dim.y); //numero de bloques que tendremos
 
     // Crea i inicialitza una grid en 2 dimensions
-    dim3 grid_dim(grid_dim,block_dim);  //la grid siempre tendra dos bloques en el eje x
+    //dim3 grid_dim(grid_dim,block_dim);  //la grid siempre tendra dos bloques en el eje x
 
     gridsizex = grid_dim.x*block_dim.x;
     gridsizey = grid_dim.y*block_dim.y;
     //...
 #if DEBUGG
-    printf("Number blocks %d\n",numbloq);
     printf("Dim block (x,y) %d-%d",block_dim.x,block_dim.y);
     printf("\nDim Grid (blocks)(x,y) %d-%d",grid_dim.x,grid_dim.y);
     printf("\ngrid size (threads)(x,y) %d-%d\n",gridsizex,gridsizey);
