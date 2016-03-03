@@ -2,9 +2,8 @@
 #include <stdlib.h>
 #define DEBUGG 1
 
-//static const int N = 16;
-static const int N = 32;
-//static const int N = 13;
+//static const int N = 16;  //Siempre matrices cuadradas
+static const int N = 36;    //Siempre matrices cuadradas
 //...
 
 
@@ -71,13 +70,13 @@ int main(void) {
     cudaMemcpy(dev_a,array,size,cudaMemcpyHostToDevice); //copiamos el array del host al device
 
     //Crea blocks de dos dimensions amb diferent nombre de threads. Ex: Comença amb 4x4
-    dim3 block_dim(2,2); //4 threads x bloque, dimension 2*2
+    dim3 block_dim(sqrt(N)/2,sqrt(N)/2); //4 threads x bloque, dimension 2*2
     //...
 
-    numbloq = N/(block_dim.y*block_dim.x); //numero de bloques que tendremos
+    dim3 grid_dim(sqrt(N)/block_dim.x,sqrt(N)/block_dim.y); //numero de bloques que tendremos
 
     // Crea i inicialitza una grid en 2 dimensions
-    dim3 grid_dim(block_dim.x, numbloq/block_dim.y);  //la grid siempre tendra dos bloques en el eje x
+    dim3 grid_dim(grid_dim,block_dim);  //la grid siempre tendra dos bloques en el eje x
 
     gridsizex = grid_dim.x*block_dim.x;
     gridsizey = grid_dim.y*block_dim.y;
