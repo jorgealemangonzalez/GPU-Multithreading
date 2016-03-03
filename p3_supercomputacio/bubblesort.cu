@@ -7,15 +7,20 @@ static const int N = 50;
 __global__ void bubble_sort(int *array, int iteracio)
 {
 	int id = threadIdx.x + blockIdx.x * blockDim.x;
-
+	/*
 	for(int i =0 ; i < N - id ; ++i){ //usamos el id del array para saber hasta donde recorrer. Es esto lo k se debe hacer?
 		if(array[i] > array[i+1]){
 			int aux = array[i];
 			array[i]=array[i+1];
 			array[i+1] = aux;
 		}
+	}*/
+	int aux;
+	if(array[id-1] < array [id]){
+		aux = array[id-1];
+		array[id-1] = array[id];
+		array[id] = aux;
 	}
-	
 }
 
 int main(int argc, char const *argv[]) 
