@@ -134,7 +134,7 @@ int main(int argc, char const *argv[])
 		printf("%d ", a[i]);
 #endif
 
-
-	
+	cudaFree(dev_a);
+	free(a);
 	return 0;
 }

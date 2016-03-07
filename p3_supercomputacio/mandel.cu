@@ -130,7 +130,30 @@ __global__ void mandel_cuda(char *red, char *green, char *blue, int width, int h
        		gridDim.x, gridDim.y 
        		threadIdx.x, threadIdx.y 
        		blockDim.x, blockDim.y */ 
+            
+    int pos_x = threadIdx.x+blockDim.x*blockIdx.x;
+    int pos_y = threadIdx.y+blockDim.y*blockIdx.y;
 
+    float x0 = ((float)pos_x)*3.5/((float)width)-2.5;
+    float y0 = ((float)pos_y)*2.0/((float)height)-1.0;
+        float x = 0.0; 
+        float y = 0.0; 
+        int iteration = 0; 
+        int max_iteration = 256; 
+        while(x*x + y*y <= 4 && iteration < max_iteration) { 
+    float xtemp = x*x - y*y + x0;
+            y = 2*x*y + y0; 
+            x = xtemp; 
+            iteration++; 
+        } 
+        int index = width*pos_y + pos_x; 
+
+        if(iteration==max_iteration) { 
+            iteration = 0; 
+        } 
+        red[index] = iteration; 
+        green[index] = iteration; 
+        blue[index] = iteration;
 
 }
 
@@ -155,25 +178,86 @@ void fes_cuda(int width, int height)
     char *image_red; 
     char *image_green; 
     char *image_blue; 
-
+    //char *cero = (char*)malloc(buffer_size);
+    //memset(cero,0,width * height);
 /* cal reservar la memòria del dispositiu */ 
-    dim3 blockDim(16, 16, 1); 
-    dim3 gridDim(width / blockDim.x, height / blockDim.y, 1); 
+    cudaMalloc((void**)&image_red, buffer_size);
+    cudaMalloc((void**)&image_green, buffer_size);
+    cudaMalloc((void**)&image_blue, buffer_size);
+    //cudaMemcpy(image_red, cero,buffer_size,cudaMemcpyHostToDevice);
+    //cudaMemcpy(image_green, cero,buffer_size,cudaMemcpyHostToDevice);
+    //cudaMemcpy(image_blue, cero,buffer_size,cudaMemcpyHostToDevice);
+
+    dim3 blockDim(16, 16,1); 
+    dim3 gridDim(width / blockDim.x, height / blockDim.y,1); 
     
-    mandel_cuda<<< gridDim, blockDim, 0 >>>(image_red, image_green, image_blue, width, height); 
-    char *host_image_red; 
-    char *host_image_green; 
-    char *host_image_blue; 
+    mandel_cuda<<< gridDim, blockDim,0>>>(image_red, image_green, image_blue, width, height); 
+    char *host_image_red = (char*)malloc(buffer_size); 
+    char *host_image_green= (char*)malloc(buffer_size); 
+    char *host_image_blue= (char*)malloc(buffer_size); 
     
     /* cal copiar els valors de la imatge al host */ 
+
+    cudaMemcpy(host_image_red,image_red,buffer_size,cudaMemcpyDeviceToHost);
+    cudaMemcpy(host_image_green,image_green,buffer_size,cudaMemcpyDeviceToHost);
+    cudaMemcpy(host_image_blue,image_blue,buffer_size,cudaMemcpyDeviceToHost);
     // Now write the file 
     write_bitmap("output_cuda.bmp", width, height, host_image_red, 
                     host_image_green, host_image_blue); 
     /* cal alliberar la memòria del dispositiu i del host */ 
+    cudaFree(image_blue);
+    cudaFree(image_green);
+    cudaFree(image_red);
+    free(host_image_blue);
+    free(host_image_green);
+    free(host_image_red);
 } 
+
+unsigned char* readBMP(const char* filename)
+{
+    int i;
+    FILE* f = fopen(filename, "rb");
+    unsigned char info[54];
+    fread(info, sizeof(unsigned char), 54, f); // read the 54-byte header
+
+    // extract image height and width from header
+    int width = *(int*)&info[18];
+    int height = *(int*)&info[22];
+
+    int size = 3 * width * height;
+    unsigned char* data = new unsigned char[size]; // allocate 3 bytes per pixel
+    fread(data, sizeof(unsigned char), size, f); // read the rest of the data at once
+    fclose(f);
+
+    for(i = 0; i < size; i += 3)
+    {
+            unsigned char tmp = data[i];
+            data[i] = data[i+2];
+            data[i+2] = tmp;
+    }
+
+    return data;
+}
+
 int main(int argc, const char * argv[]) { 
     fes_cuda(5120, 5120); 
     fes_host(5120, 5120); 
+    unsigned char *c , *h;
+    c = readBMP("output_cuda.bmp");
+    h = readBMP("output_host.bmp");
+    int succ =0;
+    int lengc = strlen((char*)h);
+    printf("%d\n",lengc);
+    for(int i = 0 ; i < lengc;++i){
+        printf("%d == %d -> %d \n",c[i],h[i],i);
+        if(c[i] != h[i]){
+            printf("Error: %d--------------\n",i);
+            succ++;
+        }
+    }
+    printf("%d\n",succ);
+    if(succ)printf("Succesfull\n");
+    else printf("Non succesfull\n");
     return 0; 
 } 
 
