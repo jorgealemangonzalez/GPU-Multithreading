@@ -178,15 +178,11 @@ void fes_cuda(int width, int height)
     char *image_red; 
     char *image_green; 
     char *image_blue; 
-    //char *cero = (char*)malloc(buffer_size);
-    //memset(cero,0,width * height);
-/* cal reservar la memòria del dispositiu */ 
+ 
     cudaMalloc((void**)&image_red, buffer_size);
     cudaMalloc((void**)&image_green, buffer_size);
     cudaMalloc((void**)&image_blue, buffer_size);
-    //cudaMemcpy(image_red, cero,buffer_size,cudaMemcpyHostToDevice);
-    //cudaMemcpy(image_green, cero,buffer_size,cudaMemcpyHostToDevice);
-    //cudaMemcpy(image_blue, cero,buffer_size,cudaMemcpyHostToDevice);
+
 
     dim3 blockDim(16, 16,1); 
     dim3 gridDim(width / blockDim.x, height / blockDim.y,1); 
@@ -245,19 +241,15 @@ int main(int argc, const char * argv[]) {
     unsigned char *c , *h;
     c = readBMP("output_cuda.bmp");
     h = readBMP("output_host.bmp");
-    int succ =0;
-    int lengc = strlen((char*)h);
-    printf("%d\n",lengc);
+    int errors =0;
+    int lengc = 5120*5120;
     for(int i = 0 ; i < lengc;++i){
-        printf("%d == %d -> %d \n",c[i],h[i],i);
         if(c[i] != h[i]){
-            printf("Error: %d--------------\n",i);
-            succ++;
+            errors++;
         }
     }
-    printf("%d\n",succ);
-    if(succ)printf("Succesfull\n");
-    else printf("Non succesfull\n");
+    if(errors)printf("There are no difference,have %d errors\n",errors);
+    else printf("There are no difference\n");
     return 0; 
 } 
 
