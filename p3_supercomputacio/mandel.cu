@@ -3,6 +3,8 @@
 #include <stdlib.h> 
 #include <stdio.h> 
 #include <cuda.h> 
+#include <time.h>
+
 
 struct BITMAPFILEHEADER 
 { 
@@ -183,8 +185,9 @@ void fes_cuda(int width, int height)
     cudaMalloc((void**)&image_green, buffer_size);
     cudaMalloc((void**)&image_blue, buffer_size);
 
+    clock_t t_device = clock();
 
-    dim3 blockDim(16, 16,1); 
+    dim3 blockDim(6, 6,1); 
     dim3 gridDim(width / blockDim.x, height / blockDim.y,1); 
     
     mandel_cuda<<< gridDim, blockDim,0>>>(image_red, image_green, image_blue, width, height); 
@@ -200,6 +203,9 @@ void fes_cuda(int width, int height)
     // Now write the file 
     write_bitmap("output_cuda.bmp", width, height, host_image_red, 
                     host_image_green, host_image_blue); 
+    t_device = clock() - t_device;
+    double time_taken_device = ((double)t_device)/CLOCKS_PER_SEC; 
+    printf("GPU %f segons with %d threats \n", time_taken_device,blockDim.x);
     /* cal alliberar la memòria del dispositiu i del host */ 
     cudaFree(image_blue);
     cudaFree(image_green);
