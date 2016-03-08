@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #define MIN(a,b) (a < b ? a : b)
-#define PINT 0
+#define PINT 1
 static const int N = 50000;
 
 
@@ -111,7 +111,7 @@ int main(int argc, char const *argv[])
 	//execucio 
 
 	clock_t t_device = clock();
-	for (int it = 0; it <= N-2; it++) {
+	for (int it = 0; it <= 2*N; it++) {
 
 		//Crida al kernel
 		if(it%2 == 0){
@@ -128,13 +128,13 @@ int main(int argc, char const *argv[])
     double time_taken_device = ((double)t_device)/CLOCKS_PER_SEC; 
     printf("GPU %f segons \n", time_taken_device);
 	
-#if PRINT
+
 	printf("\nOrdenat\n");
 	for(int i=0;i<N;i++)
 		printf("%d ", a[i]);
-#endif
+
 
 	cudaFree(dev_a);
-	free(a);
+	
 	return 0;
 }
