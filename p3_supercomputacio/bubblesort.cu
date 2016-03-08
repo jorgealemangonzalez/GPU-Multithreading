@@ -1,27 +1,13 @@
 #include <stdio.h>
 #include <time.h>
 #define MIN(a,b) (a < b ? a : b)
-#define PINT 1
+#define PRINT 0
 static const int N = 50000;
 
 
 __global__ void bubble_sort(int *array, int iteracio)
 {
 	int id = threadIdx.x + blockIdx.x * blockDim.x;
-	/*
-	for(int i =0 ; i < N - id ; ++i){ //usamos el id del array para saber hasta donde recorrer. Es esto lo k se debe hacer?
-		if(array[i] > array[i+1]){
-			int aux = array[i];
-			array[i]=array[i+1];
-			array[i+1] = aux;
-		}
-	}*/
-	/*int aux;
-	if(array[id-1] < array [id]){
-		aux = array[id-1];
-		array[id-1] = array[id];
-		array[id] = aux;
-	}*/
 	if(iteracio%2 == 0 ){
 		if(array[2*id] > array[2*id+1])
 		{
@@ -107,7 +93,6 @@ int main(int argc, char const *argv[])
 	
 	int threads_block = MIN(512,N);
 	while(N%threads_block != 0)--threads_block;
-	int blocks = N / threads_block;
 	//execucio 
 
 	clock_t t_device = clock();
@@ -119,7 +104,6 @@ int main(int argc, char const *argv[])
 		}else{
 			bubble_sort<<<1,(N/2)>>>(dev_a,it);
 		}
-			//nose el porque se debe hacer hasta 2*N
 		
 	}
 	cudaMemcpy(a,dev_a,N*sizeof(int),cudaMemcpyDeviceToHost);
@@ -128,11 +112,11 @@ int main(int argc, char const *argv[])
     double time_taken_device = ((double)t_device)/CLOCKS_PER_SEC; 
     printf("GPU %f segons \n", time_taken_device);
 	
-
+#if PRINT
 	printf("\nOrdenat\n");
 	for(int i=0;i<N;i++)
 		printf("%d ", a[i]);
-
+#endif
 
 	cudaFree(dev_a);
 	

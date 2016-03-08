@@ -11,8 +11,8 @@ __global__ void cerca_array_device(int *array,int *valor,int *res)
     int id = threadIdx.x + blockIdx.x * blockDim.x;
     if(*res == FALSE && *valor == array[id]){
     	*res = TRUE;
-    	/*for(int i = 0; i <= 1000000; i++) //demostrar que si se hacen mas operacines en la busqueda, los threads son
-			b = (b*70)/3;*/				//muxo mas rapidos.
+    	for(int i = 0; i <= 1000000; i++) //demostrar que si se hacen mas operacines en la busqueda, los threads son
+			b = (b*70)/3;
     }
 
 }
@@ -25,8 +25,8 @@ __host__ bool cerca_array_host(int *array, int valor)
 		if(array[i] == valor){
 			return true;
 		}
-		/*for(int i = 0; i <= 1000000; i++)
-			b = (b*70)/3;*/
+		for(int i = 0; i <= 1000000; i++)
+			b = (b*70)/3;
 	}
 
 	return false;
